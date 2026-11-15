@@ -1,0 +1,29 @@
+# SwarmBench epistemic test — dependencies
+#
+# Python 3.12+ (the PRD's floor; sara-agent itself needs only 3.10+).
+#
+# harbor supplies the ATIF trajectory models and the validator that
+# `epistemic_items.py --validate` runs over all 40 generated traces.
+# Pinned: 0.25.0 is what this work was measured on. Note it is a heavy
+# install — it pulls litellm, openai, boto3, supabase and fastapi as
+# transitive dependencies, so prefer a dedicated virtualenv.
+harbor==0.25.0
+
+pytest>=7.0
+
+# sara-agent provides SaraAgent, the Osprey gate, the guard registry and the
+# rule packs. It has ZERO third-party dependencies of its own (stdlib only),
+# so it adds nothing to this list.
+#
+# It currently lives inside a private monorepo. To run this benchmark you
+# need it on the path by one of:
+#
+#   vendored (what the standalone repo does):
+#       pip install -e ./vendor/sara-agent
+#
+#   or from a checkout of the monorepo:
+#       pip install -e /path/to/sara/sara-agent
+#
+# No API key is needed for the keyword and trajectory-rule paths — they are
+# fully offline. Only the model-guard experiments under experiments/ call out,
+# and those read MOONSHOT_API_KEY from the environment.

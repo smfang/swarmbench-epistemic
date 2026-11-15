@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sara-agent"
+version = "0.1.0"
+description = "Sara-in-a-Box: an offline safety classifier + Osprey policy gate, standalone (no Sheila/CRT/RL/crypto)."
+readme = "README.md"
+requires-python = ">=3.10"
+# CORE has ZERO third-party dependencies — stdlib only (sqlite3, dataclasses,
+# hashlib, json). `pip install sara-agent` cannot fail on a missing wheel.
+dependencies = []
+
+[project.optional-dependencies]
+# Each extra is guarded at import; absence gives a clear message, never a crash.
+studio = []        # frontier LLM for NL->SkillFile / NL->SML (not implemented in CORE)
+audit = []         # L1/L2 crypto attestation (not implemented in CORE)
+osprey-sml = []    # external open-source Osprey SML engine (kafka/subprocess)
+a2a = []           # remote Sheila via A2A
+llm-guards = []    # guards/kimi.py uses stdlib urllib — no wheel needed, just MOONSHOT_API_KEY
+guardreasoner = ["vllm", "transformers"]  # guards/guardreasoner.py real (vLLM/GPU) backend
+dev = ["pytest>=7.0"]
+report = ["matplotlib"]  # benchmark/report/plots.py flip-rate PNG — dev tooling, not CORE
+
+[project.scripts]
+sara = "sara_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sara_agent*"]
